@@ -119,7 +119,7 @@ try:
     print(parsed_pol)
 
     data_dictP = completion_pol.model_dump()
-    citations_pol = data_dictP["choices"][0]["message"].get("citations", []) #AI helped me with this
+    citations_pol = data_dictP["choices"][0]["message"].get("citations", []) #AI helped me with this (HAVE TO LEARN AND PRACTICE JSON IN PYTHON!)
     category_citations.insert(0, citations_pol)
     citations_politics = citations_pol
 
