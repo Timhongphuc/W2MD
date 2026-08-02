@@ -48,6 +48,8 @@ try:
         "Latest news and progress made in the field of world politics.",
         end_published_date=str(current_date),
         exclude_domains=["reddit.com", "x.com", "truthsocial.com", "foxnews.com"],
+        include_domains=["reuters.com", "nytimes.com", "dw.com", "bbc.com", "economist.com", "wsj.com",
+                         "theguardian.com", "apnews.com"],
         num_results=10,
         start_published_date=str(current_date),
         type="auto",
@@ -63,6 +65,8 @@ try:
         "Latest news and progress made in the field of technology around the world.",
         end_published_date=str(current_date),
         exclude_domains=["reddit.com", "x.com", "truthsocial.com", "foxnews.com"],
+        include_domains=["reuters.com", "nytimes.com", "dw.com", "bbc.com", "economist.com", "wsj.com",
+                         "theguardian.com", "apnews.com"],
         num_results=10,
         start_published_date=str(current_date),
         type="auto",
@@ -77,6 +81,8 @@ try:
         "Latest news and progress made in the field of economy around the world.",
         end_published_date=str(current_date),
         exclude_domains=["reddit.com", "x.com", "truthsocial.com", "foxnews.com"],
+        include_domains=["reuters.com", "nytimes.com", "dw.com", "bbc.com", "economist.com", "wsj.com",
+                         "theguardian.com", "apnews.com"],
         num_results=10,
         start_published_date=str(current_date),
         type="auto",
@@ -92,6 +98,8 @@ try:
         "Latest news and progress made in the field of war in the affected countries around the world.",
         end_published_date=str(current_date),
         exclude_domains=["reddit.com", "x.com", "truthsocial.com", "foxnews.com"],
+        include_domains=["reuters.com", "nytimes.com", "dw.com", "bbc.com", "economist.com", "wsj.com",
+                         "theguardian.com", "apnews.com"],
         num_results=10,
         start_published_date=str(current_date),
         type="auto",
@@ -119,51 +127,51 @@ try:
     completion_pol = client.chat.send(
             model="anthropic/claude-sonnet-5",
             messages=[
-                {"role": "user", "content": f"Write a brief and also short paragraph about the latest political progress made around the world based on the sources you got provided with. Ground your answers with the provided sources ONLY. Stay specific and accurate. Your sources are: {categories_web[0]}"}
+                {"role": "user", "content": f"Write a brief and also short paragraph (about 70-100 Words) about the latest political progress made around the world based on the sources you got provided with. Ground your answers with the provided sources ONLY. Stay specific and accurate. The Structure is always the same: 1. The text with a few sentences about the current progress, 2. In the end, point out the sources, which are displayed 'down below', say: 'You will find the associated sources below this article.'. Remember that staying NEUTRAL and ACCURATE, WITHOUT making up any information is the/your TOP PRIORITY. Your sources are: {categories_web[0]}"}
             ],
             stream=False,
         )
-    category_completions.insert(0, completion_pol)
+    category_completions.insert(0, completion_pol.choices[0].message.content)
 
 
     completion_tech = client.chat.send(
                 model="anthropic/claude-sonnet-5",
                 messages=[
-                    {"role": "user", "content": f"Write a brief and also short paragraph about the latest political progress made around the world based on the sources you got provided with. Ground your answers with the provided sources ONLY. Stay specific and accurate. Your sources are: {categories_web[1]}"}
+                    {"role": "user", "content": f"Write a brief and also short paragraph (about 70-100 Words) about the latest technological progress made around the world based on the sources you got provided with. Ground your answers with the provided sources ONLY. Stay specific and accurate. The Structure is always the same: 1. The text with a few sentences about the current progress, 2. In the end, point out the sources, which are displayed 'down below', say: 'You will find the associated sources below this article.'. Remember that staying NEUTRAL and ACCURATE, WITHOUT making up any information is the/your TOP PRIORITY. Your sources are: {categories_web[1]}"}
                 ],
                 stream=False,
             )
-    category_completions.insert(1, completion_tech)
+    category_completions.insert(1, completion_tech.choices[0].message.content)
 
 
     completion_eco = client.chat.send(
                 model="anthropic/claude-sonnet-5",
                 messages=[
-                    {"role": "user", "content": f"Write a brief and also short paragraph about the latest political progress made around the world based on the sources you got provided with. Ground your answers with the provided sources ONLY. Stay specific and accurate. Your sources are: {categories_web[2]}"}
+                    {"role": "user", "content": f"Write a brief and also short paragraph (about 70-100 Words) about the latest economic progress made around the world based on the sources you got provided with. Ground your answers with the provided sources ONLY. Stay specific and accurate. The Structure is always the same: 1. The text with a few sentences about the current progress, 2. In the end, point out the sources, which are displayed 'down below', say: 'You will find the associated sources below this article.'. Remember that staying NEUTRAL and ACCURATE, WITHOUT making up any information is the/your TOP PRIORITY. Your sources are: {categories_web[2]}"}
                 ],
                 stream=False,
     )
-    category_completions.insert(2, completion_eco)
+    category_completions.insert(2, completion_eco.choices[0].message.content)
 
 
     completion_war = client.chat.send(
                 model="anthropic/claude-sonnet-5",
                 messages=[
-                    {"role": "user", "content": f"Write a brief and also short paragraph about the latest political progress made around the world based on the sources you got provided with. Ground your answers with the provided sources ONLY. Stay specific and accurate. Your sources are: {categories_web[3]}"}
+                    {"role": "user", "content": f"Write a brief and also short paragraph (about 70-100 Words) about the latest progress made in the field of war in the affected countries around the world based on the sources you got provided with. Ground your answers with the provided sources ONLY. Stay specific and accurate. The Structure is always the same: 1. The text with a few sentences about the current progress, 2. In the end, point out the sources, which are displayed 'down below', say: 'You will find the associated sources below this article.'. Remember that staying NEUTRAL and ACCURATE, WITHOUT making up any information is the/your TOP PRIORITY. Your sources are: {categories_web[3]}"}
                 ],
                 stream=False,
     )
-    category_completions.insert(3, completion_war)
+    category_completions.insert(3, completion_war.choices[0].message.content)
 
 
     print("-------------------------------------------------------------")
-    print(completion_pol)
+    print(completion_pol.choices[0].message.content)
     print("-------------------------------------------------------------")
-    print(completion_tech)
+    print(completion_tech.choices[0].message.content)
     print("-------------------------------------------------------------")
-    print(completion_eco)
+    print(completion_eco.choices[0].message.content)
     print("-------------------------------------------------------------")
-    print(completion_war)
+    print(completion_war.choices[0].message.content)
     print("-------------------------------------------------------------")
 
 except:
@@ -184,7 +192,14 @@ response = (
     .insert({"politics": category_completions[0],
              "technology": category_completions[1],
              "economy": category_completions[2],
-             "war": category_completions[3]
+             "war": category_completions[3],
+
+             "all_citations": "Test",
+             "citations_politics": "Test",
+             "citations_technology": "Test",
+             "citations_economy": "Test",
+             "citations_war": "Test"
+
             #"all_citations": category_citations,
             #"citations_politics": citations_politics,
             #"citations_technology": citations_technology,

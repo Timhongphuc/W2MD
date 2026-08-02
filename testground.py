@@ -72,3 +72,23 @@
 #     stream=False,
 # )
 # print(response.choices[0].message.content)
+
+
+from openrouter import OpenRouter
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+client = OpenRouter(
+        api_key=os.environ.get("HACK_CLUB_AI_API_KEY"),
+        server_url="https://ai.hackclub.com/proxy/v1",
+    )
+
+response = client.chat.send(
+            model="anthropic/claude-sonnet-5",
+            messages=[
+                {"role": "user", "content": f"Write a brief and also short paragraph about the latest political progress made around the world based on the sources you got provided with. Ground your answers with the provided sources ONLY. Stay specific and accurate. For testing purposes, just make up something stupid."}
+            ],
+            stream=False,
+        )
+print(response.choices[0].message.content)
