@@ -5,6 +5,7 @@ import os
 from supabase import create_client, Client
 from openrouter import OpenRouter
 from datetime import date
+import json
 
 load_dotenv()
 
@@ -12,7 +13,7 @@ current_date = date.today()
 
 categories_web = []
 category_completions = []
-category_citations = []
+category_citations = [] #Deprecated
 citations_politics = ""
 citations_technology = ""
 citations_economy = ""
@@ -29,16 +30,20 @@ try:
     url: str = os.environ.get("SUPABASE_URL")
     key: str = os.environ.get("SUPABASE_KEY")
     supabase: Client = create_client(url, key)
-except:
-    print("An error occured while connecting to one of the API's. (Exa.ai)")
-    response = ( #Try reaching Supabase
+
+
+except Exception as e:
+    print(f"An error occured while connecting to one of the API's. (Exa.ai) Error: {e}")
+    response = (  # Try reaching Supabase
         supabase.table("NewsStorage")
-        .insert({"politics": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me",
-                 "technology": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me",
-                 "economy": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me",
-                 "war": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me"})
+        .insert({
+                    "politics": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me",
+                    "technology": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me",
+                    "economy": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me",
+                    "war": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me"})
         .execute()
     )
+    exit()
 
 #-----------------------Gather information from sources-----------------------
 
@@ -58,7 +63,10 @@ try:
         }
     )
     categories_web.insert(0, webresult_pol)
-
+    # citations_politics = f"{webresult_pol["results"][0]["id"]}, {webresult_pol["results"][1]["id"]}, {webresult_pol["results"][2]["id"]}, {webresult_pol["results"][3]["id"]}, {webresult_pol["results"][4]["id"]}, {webresult_pol["results"][5]["id"]}}, {webresult_pol["results"][6]["id"]}, {webresult_pol["results"][7]["id"]}, {webresult_pol["results"][8]["id"]}, {webresult_pol["results"][9]["id"]}" #Didn't work
+    #citations_politics = webresult_pol.results[0].id + ", " + webresult_pol.results[1].id + ", " + webresult_pol.results[2].id + ", " + webresult_pol.results[3].id + ", " + webresult_pol.results[4].id + ", " + webresult_pol.results[5].id + ", " + webresult_pol.results[6].id + ", " + webresult_pol.results[7].id + ", " + webresult_pol.results[8].id + ", " + webresult_pol.results[9].id #Didn't work
+    citations_politics = ", ".join(r.id for r in webresult_pol.results) #AI helped me
+    print(citations_politics)
 
     #Technology
     webresult_tech = exa.search(
@@ -75,6 +83,8 @@ try:
         }
     )
     categories_web.insert(1, webresult_tech)
+    citations_technology = ", ".join(r.id for r in webresult_tech.results)  # AI helped me
+    print(citations_technology)
 
     #Economy
     webresult_eco = exa.search(
@@ -82,7 +92,7 @@ try:
         end_published_date=str(current_date),
         exclude_domains=["reddit.com", "x.com", "truthsocial.com", "foxnews.com"],
         include_domains=["reuters.com", "nytimes.com", "dw.com", "bbc.com", "economist.com", "wsj.com",
-                         "theguardian.com", "apnews.com"],
+                         "theguardian.com", "apnews.com", "theverge.com", "techcrunch.com"],
         num_results=10,
         start_published_date=str(current_date),
         type="auto",
@@ -91,7 +101,8 @@ try:
         }
     )
     categories_web.insert(2, webresult_eco)
-
+    citations_economy = ", ".join(r.id for r in webresult_eco.results)  # AI helped me
+    print(citations_economy)
 
     #War
     webresult_war = exa.search(
@@ -108,10 +119,13 @@ try:
         }
     )
     categories_web.insert(3, webresult_war)
+    citations_warVAR = ", ".join(r.id for r in webresult_war.results)  # AI helped me
+    print(citations_warVAR)
 
 
-except:
-    print("An error occured while connecting to one of the API's. (Exa.ai)")
+
+except Exception as e:
+    print(f"An error occured while connecting to one of the API's. (Exa.ai) Error: {e}")
     response = ( #Try reaching Supabase
         supabase.table("NewsStorage")
         .insert({"politics": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me",
@@ -174,8 +188,9 @@ try:
     print(completion_war.choices[0].message.content)
     print("-------------------------------------------------------------")
 
-except:
-    print("An error occured while connecting to one of the API's. (Exa.ai)")
+
+except Exception as e:
+    print(f"An error occured while connecting to one of the API's. (Exa.ai) Error: {e}")
     response = ( #Try reaching Supabase
         supabase.table("NewsStorage")
         .insert({"politics": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me",
@@ -194,21 +209,21 @@ response = (
              "economy": category_completions[2],
              "war": category_completions[3],
 
-             "all_citations": "Test",
-             "citations_politics": "Test",
-             "citations_technology": "Test",
-             "citations_economy": "Test",
-             "citations_war": "Test"
+             "all_citations": "-|NA|-",
+             "citations_politics": citations_politics,
+             "citations_technology": citations_technology,
+             "citations_economy": citations_economy,
+             "citations_war": citations_warVAR
 
-            #"all_citations": category_citations,
-            #"citations_politics": citations_politics,
-            #"citations_technology": citations_technology,
-            #"citations_economy": citations_economy,
-            #"citations_war": citations_war
+            # "all_citations": "Citations can be found separately now.",
+            # "citations_politics": categories_web[0].results.id,
+            # "citations_technology": categories_web[1].results.id,
+            # "citations_economy": categories_web[2].results.id,
+            # "citations_war": categories_web[3].results.id
             })
     .execute()
 )
-#-----------------------Clear all variables-----------------------
+#-----------------------Clear all variables and lists-----------------------
 
 categories = []
 category_completions = []
