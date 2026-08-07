@@ -5,7 +5,6 @@ import os
 from supabase import create_client, Client
 from openrouter import OpenRouter
 from datetime import date
-import json
 
 load_dotenv()
 
