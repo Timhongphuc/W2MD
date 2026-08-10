@@ -13,10 +13,10 @@ current_date = date.today()
 categories_web = []
 category_completions = []
 category_citations = [] #Deprecated
-citations_politics = ""
-citations_technology = ""
-citations_economy = ""
-citations_warVAR = ""
+citations_politics = []
+citations_technology = []
+citations_economy = []
+citations_war = []
 
 try:
     exa = Exa(api_key=os.environ.get("EXA_API_KEY"))
@@ -64,7 +64,10 @@ try:
     categories_web.insert(0, webresult_pol)
     # citations_politics = f"{webresult_pol["results"][0]["id"]}, {webresult_pol["results"][1]["id"]}, {webresult_pol["results"][2]["id"]}, {webresult_pol["results"][3]["id"]}, {webresult_pol["results"][4]["id"]}, {webresult_pol["results"][5]["id"]}}, {webresult_pol["results"][6]["id"]}, {webresult_pol["results"][7]["id"]}, {webresult_pol["results"][8]["id"]}, {webresult_pol["results"][9]["id"]}" #Didn't work
     #citations_politics = webresult_pol.results[0].id + ", " + webresult_pol.results[1].id + ", " + webresult_pol.results[2].id + ", " + webresult_pol.results[3].id + ", " + webresult_pol.results[4].id + ", " + webresult_pol.results[5].id + ", " + webresult_pol.results[6].id + ", " + webresult_pol.results[7].id + ", " + webresult_pol.results[8].id + ", " + webresult_pol.results[9].id #Didn't work
-    citations_politics = ", ".join(r.id for r in webresult_pol.results) #AI helped me
+
+    for result in webresult_pol.results:
+        citations_politics.append(result.id)
+
     print(citations_politics)
 
     #Technology
@@ -82,7 +85,10 @@ try:
         }
     )
     categories_web.insert(1, webresult_tech)
-    citations_technology = ", ".join(r.id for r in webresult_tech.results)  # AI helped me
+
+    for result in webresult_tech.results:
+        citations_technology.append(result.id)
+
     print(citations_technology)
 
     #Economy
@@ -100,7 +106,10 @@ try:
         }
     )
     categories_web.insert(2, webresult_eco)
-    citations_economy = ", ".join(r.id for r in webresult_eco.results)  # AI helped me
+
+    for result in webresult_eco.results:
+        citations_economy.append(result.id)
+
     print(citations_economy)
 
     #War
@@ -118,8 +127,11 @@ try:
         }
     )
     categories_web.insert(3, webresult_war)
-    citations_warVAR = ", ".join(r.id for r in webresult_war.results)  # AI helped me
-    print(citations_warVAR)
+
+    for result in webresult_war.results:
+        citations_war.append(result.id)
+
+    print(citations_war)
 
 
 
@@ -212,7 +224,7 @@ response = (
              "citations_politics": citations_politics,
              "citations_technology": citations_technology,
              "citations_economy": citations_economy,
-             "citations_war": citations_warVAR
+             "citations_war": citations_war
 
             # "all_citations": "Citations can be found separately now.",
             # "citations_politics": categories_web[0].results.id,
