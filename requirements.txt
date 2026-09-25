@@ -1,0 +1,4 @@
+exa-py
+openrouter
+python-dotenv
+supabase
