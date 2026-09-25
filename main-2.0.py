@@ -41,7 +41,7 @@ except Exception as e:
                     "economy": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me",
                     "war": "Ooops, something broke. If you're reading this, the Exa API failed. Please contact: timhongphuc@proton.me"})
         .execute()
-    )
+    )   
     exit()
 
 #-----------------------Gather information from sources-----------------------
